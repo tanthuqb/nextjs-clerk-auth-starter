@@ -1,6 +1,10 @@
-# 🚀 Next.js + Clerk Auth Starter
+# 🚀 Next.js Clerk Authentication Starter
 
-A modern authentication starter template built with **Next.js 15**, **Clerk**, **Supabase**, and **Tailwind CSS**. Get up and running with a fully functional authentication system in minutes.
+A production-ready authentication starter kit built with **Next.js 15**, **Clerk**, **Supabase**, and **Tailwind CSS**.  
+Complete with user authentication flows, protected routes, profile management, theme switching, and a clean modern UI.
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://nextjs-clerk-auth-starter.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Source-black?style=for-the-badge&logo=github)](https://github.com/tanthuqb/nextjs-clerk-auth-starter)
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
 ![Clerk](https://img.shields.io/badge/Clerk-Auth-6C47FF?style=flat-square&logo=clerk)
@@ -8,82 +12,134 @@ A modern authentication starter template built with **Next.js 15**, **Clerk**, *
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=flat-square&logo=tailwind-css)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)
 
+---
+
 ## 📸 Screenshots
 
-| Sign Up | Dashboard | Profile |
-|---------|-----------|---------|
-| Clerk Sign Up Form | Authenticated Dashboard | Profile Update Form |
+| Sign Up | Dashboard | Profile (Dark Mode) |
+|---------|-----------|---------------------|
+| ![Sign Up](./screenshots/signup.png) | ![Dashboard](./screenshots/dashboard.png) | ![Profile](./screenshots/profile-dark.png) |
+
+---
 
 ## ✨ Features
 
-- 🔐 **Authentication** - Sign up, sign in, and sign out with Clerk
-- 📝 **Onboarding Flow** - Custom user onboarding with metadata storage
-- 🛡️ **Route Protection** - Middleware-based route protection
-- 💾 **Supabase Integration** - Profile management with Supabase database
-- 🌙 **Dark Mode** - Full dark mode support with Tailwind CSS
-- ⚡ **Next.js 15** - Latest Next.js with App Router
-- 🎨 **Tailwind CSS v4** - Modern styling with Tailwind
-- 📱 **Responsive Design** - Mobile-first responsive UI
-- 🔄 **Server Actions** - Modern React Server Actions for data mutations
+### 🔐 Authentication (Clerk)
+- Sign up / Sign in with email or OAuth
+- Session management & persistence
+- Protected routes using middleware
+- Automatic redirect for unauthenticated users
+
+### 👤 User Profile
+- Update profile information (name, phone, address, bio)
+- Avatar synced from Clerk
+- Profile data stored in Supabase
+
+### 🛡️ Route Protection
+- Middleware-based route protection
+- Layout guards for dashboard
+- Automatic redirect to sign-up
+
+### 🎨 UI/UX
+- Dark / Light theme support
+- Responsive mobile-first design
+- Clean and modern interface
+- Accessible components
+
+### 🗂️ Database Integration
+- Supabase PostgreSQL connection
+- Row Level Security (RLS) enabled
+- Auto-generated timestamps
+
+### 🧱 Code Structure
+- Next.js 15 App Router
+- Server Actions for mutations
+- Modular component architecture
+- Type-safe with TypeScript
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| [Next.js 15](https://nextjs.org/) | React framework with App Router |
+| [Clerk](https://clerk.com/) | Authentication & user management |
+| [Supabase](https://supabase.com/) | PostgreSQL database & API |
+| [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first CSS framework |
+| [TypeScript](https://www.typescriptlang.org/) | Type safety |
+
+---
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── app/
-│   ├── page.tsx              # Home/Dashboard page
+│   ├── page.tsx              # Home/Dashboard
 │   ├── layout.tsx            # Root layout
+│   ├── loading.tsx           # Loading UI
+│   ├── error.tsx             # Error boundary
+│   ├── not-found.tsx         # 404 page
+│   ├── global-error.tsx      # Global error handler
 │   ├── globals.css           # Global styles
 │   ├── onboarding/           # Onboarding flow
 │   │   ├── page.tsx
 │   │   ├── layout.tsx
 │   │   └── _actions.ts
-│   ├── profile/              # Profile management (Supabase)
+│   ├── profile/              # Profile management
 │   │   ├── page.tsx
 │   │   └── _actions.ts
 │   ├── sign-in/
 │   │   └── [[...sign-in]]/
-│   │       └── page.tsx      # Sign in page
+│   │       └── page.tsx
 │   └── sign-up/
 │       └── [[...sign-up]]/
-│           └── page.tsx      # Sign up page
+│           └── page.tsx
 ├── lib/
-│   └── supabase.ts           # Supabase client configuration
+│   └── supabase.ts           # Supabase client
 ├── middleware.ts             # Auth middleware
 └── components/               # Reusable components
 
 supabase/
-└── migrations/               # Database migrations
+└── migrations/
     └── 001_create_profiles_table.sql
 ```
 
-## 🚀 Getting Started
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
-- npm, yarn, or pnpm
+- Node.js 18+
 - [Clerk Account](https://clerk.com/)
 - [Supabase Account](https://supabase.com/)
 
-### 1. Clone the repository
+### Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/tanthuqb/nextjs-clerk-auth-starter.git
+
+# Navigate to project
 cd nextjs-clerk-auth-starter
-```
 
-### 2. Install dependencies
-
-```bash
+# Install dependencies
 npm install
-# or
-yarn install
-# or
-pnpm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Run development server
+npm run dev
 ```
 
-### 3. Set up environment variables
+Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+---
+
+## ⚙️ Environment Variables
 
 Create a `.env.local` file in the root directory:
 
@@ -101,126 +157,83 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxxxx
 ```
 
-> 📌 Get your Clerk API keys from [Clerk Dashboard](https://dashboard.clerk.com/)
-> 
-> 📌 Get your Supabase keys from [Supabase Dashboard](https://supabase.com/dashboard)
+> 📌 Get Clerk keys: [Clerk Dashboard](https://dashboard.clerk.com/)  
+> 📌 Get Supabase keys: [Supabase Dashboard](https://supabase.com/dashboard)
 
-### 4. Set up Supabase Database
+---
 
-1. Go to your Supabase project → SQL Editor
-2. Copy and run the migration from `supabase/migrations/001_create_profiles_table.sql`
+## 🗄️ Database Setup
+
+Run this SQL in your Supabase SQL Editor:
 
 ```sql
--- Creates profiles table with RLS enabled
--- See full migration file for complete SQL
+-- Create profiles table
+CREATE TABLE IF NOT EXISTS profiles (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  clerk_user_id TEXT UNIQUE NOT NULL,
+  full_name TEXT,
+  avatar_url TEXT,
+  bio TEXT,
+  phone TEXT,
+  address TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+-- Create policies
+CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (true);
+CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (true);
 ```
 
-### 5. Run the development server
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see the app.
+---
 
 ## 🔒 Authentication Flow
 
-```mermaid
-graph TD
-    A[User visits /] --> B{Authenticated?}
-    B -->|No| C[Redirect to /sign-up]
-    B -->|Yes| D{Onboarding Complete?}
-    D -->|No| E[Redirect to /onboarding]
-    D -->|Yes| F[Show Dashboard]
-    F --> G[Can access /profile]
+```
+User visits / 
+    ↓
+Authenticated? 
+    ├── No → Redirect to /sign-up
+    └── Yes → Onboarding complete?
+                  ├── No → Redirect to /onboarding
+                  └── Yes → Show Dashboard
+                              ↓
+                        Can access /profile
 ```
 
-1. **Unauthenticated users** visiting `/` are redirected to `/sign-up`
-2. **After sign up/sign in**, users are redirected to `/onboarding`
-3. **After completing onboarding**, users can access the dashboard at `/`
-4. **Profile page** (`/profile`) allows users to update their profile stored in Supabase
-5. **Invalid routes** redirect to `/sign-up` for unauthenticated users
+---
 
-## 💾 Supabase Profile Schema
+## 🎯 Use Cases
 
-The `profiles` table stores additional user data:
+This starter is perfect for:
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Primary key (auto-generated) |
-| clerk_user_id | TEXT | Clerk user ID (unique, indexed) |
-| full_name | TEXT | User's full name |
-| avatar_url | TEXT | Avatar URL (synced from Clerk) |
-| bio | TEXT | User bio/description |
-| phone | TEXT | Phone number |
-| address | TEXT | Address |
-| created_at | TIMESTAMP | Created timestamp (auto) |
-| updated_at | TIMESTAMP | Updated timestamp (auto-trigger) |
+- 🏢 **SaaS Applications** - Multi-tenant apps with user management
+- 📊 **Admin Dashboards** - Protected admin interfaces
+- 🛒 **E-commerce** - Customer accounts and profiles
+- 📱 **Web Apps** - Any app requiring user authentication
 
-## 🛠️ Customization
+---
 
-### Modify Onboarding Fields
+## 🚀 Deploy
 
-Edit `src/app/onboarding/page.tsx` to customize the onboarding form fields.
-
-### Modify Profile Fields
-
-1. Update the `Profile` interface in `src/lib/supabase.ts`
-2. Add new fields to the form in `src/app/profile/page.tsx`
-3. Update the Supabase table schema accordingly
-
-### Add Protected Routes
-
-Update `src/middleware.ts` to add or modify protected routes:
-
-```typescript
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/about',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-])
-```
-
-### Customize Clerk Theme
-
-Visit [Clerk Dashboard](https://dashboard.clerk.com/) → Customization to modify:
-- Colors and branding
-- Social login providers
-- Email templates
-- Redirect URLs
-
-## 🧪 Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| [Next.js 15](https://nextjs.org/) | React framework with App Router |
-| [Clerk](https://clerk.com/) | Authentication & user management |
-| [Supabase](https://supabase.com/) | PostgreSQL database & API |
-| [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first CSS framework |
-| [TypeScript](https://www.typescriptlang.org/) | Type safety |
-
-## 📚 Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Clerk Documentation](https://clerk.com/docs)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-
-## 🚀 Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
+### Deploy on Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tanthuqb/nextjs-clerk-auth-starter&env=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
-### Environment Variables for Deployment
+### Required Environment Variables
 
-Make sure to add these environment variables in your Vercel project settings:
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk public key |
+| `CLERK_SECRET_KEY` | Clerk secret key |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-- `CLERK_SECRET_KEY`
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+---
 
 ## 🤝 Contributing
 
@@ -228,9 +241,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+---
 
 ## 📄 License
 
@@ -238,4 +253,15 @@ MIT License - feel free to use this starter for your projects!
 
 ---
 
-Made with ❤️ by [tanthuqb](https://github.com/tanthuqb)
+## 👨‍💻 Author
+
+**tanthuqb**
+
+- GitHub: [@tanthuqb](https://github.com/tanthuqb)
+- Demo: [nextjs-clerk-auth-starter.vercel.app](https://nextjs-clerk-auth-starter.vercel.app)
+
+---
+
+<p align="center">
+  Made with ❤️ using Next.js, Clerk & Supabase
+</p>
