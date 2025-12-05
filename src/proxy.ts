@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
 ])
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding'])
+const isProfileRoute = createRouteMatcher(['/profile'])
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
    const { isAuthenticated, sessionClaims, redirectToSignIn } = await auth()
@@ -22,6 +23,18 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   // For users visiting /dashboard, don't try to redirect
   if(isOnboardingRoute(req) && isAuthenticated) {
     return NextResponse.next()
+  }
+
+  // Allow authenticated users to access profile page
+  if(isProfileRoute(req) && isAuthenticated) {
+    return NextResponse.next()
+  }
+
+  // Redirect to sign-in if trying to access profile without auth
+  if(isProfileRoute(req) && !isAuthenticated) {
+    return redirectToSignIn({
+      returnBackUrl: req.url,
+    })
   }
 
   // If the user isn't signed in and the route is private, redirect to sign-in

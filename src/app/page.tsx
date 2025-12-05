@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { UserButton } from '@clerk/nextjs'
+import Link from 'next/link'
 
 export default async function Home() {
   const { userId } = await auth()
@@ -11,7 +12,19 @@ export default async function Home() {
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
             🚀 Next.js + Clerk Auth Starter
           </h1>
-          {userId && <UserButton afterSignOutUrl="/sign-up" />}
+          <div className="flex items-center gap-4">
+            {userId && (
+              <>
+                <Link 
+                  href="/profile"
+                  className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  Edit Profile
+                </Link>
+                <UserButton afterSignOutUrl="/sign-up" />
+              </>
+            )}
+          </div>
         </div>
         
         <div className="flex flex-col items-center gap-4 text-center">
@@ -43,9 +56,9 @@ export default async function Home() {
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-            <h3 className="font-semibold text-zinc-900 dark:text-white">🌙 Dark Mode</h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-white">💾 Supabase</h3>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Tailwind dark mode support
+              Profile storage with Supabase
             </p>
           </div>
         </div>
