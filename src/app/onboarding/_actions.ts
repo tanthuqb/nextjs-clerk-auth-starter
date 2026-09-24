@@ -1,26 +1,39 @@
-"use server"
+'use server'
+
 import { auth, clerkClient } from '@clerk/nextjs/server'
-import { on } from 'events'
+
+function readText(formData: FormData, name: string, maxLength = 200): string {
+  const value = formData.get(name)
+  return typeof value === 'string' ? value.trim().slice(0, maxLength) : ''
+}
 
 export const completeOnboarding = async (formData: FormData) => {
-    const { isAuthenticated, userId } = await auth()
+  const { isAuthenticated, userId } = await auth()
 
-    if (!isAuthenticated) {
-        return { message: 'No Logged In User' }
-    }
+  if (!isAuthenticated) {
+    return { error: 'No logged in user' }
+  }
 
-    const client = await clerkClient()
+  const applicationName = readText(formData, 'applicationName')
+  const applicationType = readText(formData, 'applicationType')
 
-    try {
-        const res = await client.users.updateUserMetadata(userId, {
-            publicMetadata: {
-                onboardingComplete: true,
-                applicationName: formData.get('applicationName'),
-                applicationType: formData.get('applicationType'),
-            },
-        })
-        return { message: 'Onboarding Complete' }
-    } catch (error) {
-        return { error: 'There was an error updating the user metadata.' }
-    }
+  if (!applicationName || !applicationType) {
+    return { error: 'Application name and type are required.' }
+  }
+
+  const client = await clerkClient()
+
+  try {
+    await client.users.updateUserMetadata(userId, {
+      publicMetadata: {
+        onboardingComplete: true,
+        applicationName,
+        applicationType,
+      },
+    })
+    return { message: 'Onboarding complete' }
+  } catch (error) {
+    console.error('Failed to update user metadata', error)
+    return { error: 'There was an error updating the user metadata.' }
+  }
 }

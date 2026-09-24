@@ -1,9 +1,19 @@
 import { auth } from '@clerk/nextjs/server'
 import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default async function Home() {
-  const { userId } = await auth()
+  // Resource-based protection (does not rely on proxy.ts path matching).
+  const { isAuthenticated, sessionClaims } = await auth()
+
+  if (!isAuthenticated) {
+    redirect('/sign-up')
+  }
+
+  if (!sessionClaims?.metadata?.onboardingComplete) {
+    redirect('/onboarding')
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -13,17 +23,13 @@ export default async function Home() {
             🚀 Next.js + Clerk Auth Starter
           </h1>
           <div className="flex items-center gap-4">
-            {userId && (
-              <>
-                <Link 
-                  href="/profile"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                >
-                  Edit Profile
-                </Link>
-                <UserButton afterSignOutUrl="/sign-up" />
-              </>
-            )}
+            <Link
+              href="/profile"
+              className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              Edit Profile
+            </Link>
+            <UserButton />
           </div>
         </div>
         
@@ -50,9 +56,9 @@ export default async function Home() {
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-            <h3 className="font-semibold text-zinc-900 dark:text-white">🛡️ Middleware</h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-white">🛡️ Proxy</h3>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Route protection built-in
+              Route protection via Next.js proxy.ts
             </p>
           </div>
           <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">

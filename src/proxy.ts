@@ -1,66 +1,49 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextRequest , NextResponse } from 'next/server'
+import { clerkMiddleware } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/about',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-])
+// Next.js 16 renamed `middleware.ts` to `proxy.ts`. Clerk's `clerkMiddleware()` is
+// still required and is exported as the default proxy function.
+//
+// Security note: the redirects below are a UX convenience only. Every protected
+// page, layout and Server Action performs its own auth check (resource-based
+// protection, as recommended by Clerk since `createRouteMatcher()` was deprecated).
 
-const isOnboardingRoute = createRouteMatcher(['/onboarding'])
-const isProfileRoute = createRouteMatcher(['/profile'])
+function matchesSegment(pathname: string, prefix: string) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
+}
 
-export default clerkMiddleware(async (auth, req: NextRequest) => {
-   const { isAuthenticated, sessionClaims, redirectToSignIn } = await auth()
+const PUBLIC_PREFIXES = ['/sign-in', '/sign-up']
+const SIGN_IN_REQUIRED_PREFIXES = ['/onboarding', '/profile']
 
-  // Redirect root path to sign-up page if not authenticated
-  if(req.nextUrl.pathname === '/' && !isAuthenticated) {
-    const signUpUrl = new URL('/sign-up', req.url)
-    return NextResponse.redirect(signUpUrl)
-  }
+export default clerkMiddleware(async (auth, req) => {
+  const { pathname } = req.nextUrl
 
-  // For users visiting /dashboard, don't try to redirect
-  if(isOnboardingRoute(req) && isAuthenticated) {
+  if (PUBLIC_PREFIXES.some((prefix) => matchesSegment(pathname, prefix))) {
     return NextResponse.next()
   }
 
-  // Allow authenticated users to access profile page
-  if(isProfileRoute(req) && isAuthenticated) {
+  const { isAuthenticated, sessionClaims, redirectToSignIn } = await auth()
+
+  if (!isAuthenticated) {
+    if (SIGN_IN_REQUIRED_PREFIXES.some((prefix) => matchesSegment(pathname, prefix))) {
+      return redirectToSignIn({ returnBackUrl: req.url })
+    }
+    // `/` and any other route: send new visitors to sign-up.
+    return NextResponse.redirect(new URL('/sign-up', req.url))
+  }
+
+  // Signed-in users can always reach the onboarding flow.
+  if (matchesSegment(pathname, '/onboarding')) {
     return NextResponse.next()
   }
 
-  // Redirect to sign-in if trying to access profile without auth
-  if(isProfileRoute(req) && !isAuthenticated) {
-    return redirectToSignIn({
-      returnBackUrl: req.url,
-    })
+  // Users without `onboardingComplete: true` in their public metadata must finish
+  // onboarding first. Requires the session token customization described in the README.
+  if (!sessionClaims?.metadata?.onboardingComplete) {
+    return NextResponse.redirect(new URL('/onboarding', req.url))
   }
 
-  // If the user isn't signed in and the route is private, redirect to sign-in
-  if(isOnboardingRoute(req) && !isAuthenticated) {
-    return redirectToSignIn({
-      returnBackUrl: req.url,
-    })
-  }
-
-  // Catch users who do not have `onboardingComplete: true` in their publicMetadata
-  // Redirect them to the /onboarding route to complete the onboarding
-  if(isAuthenticated && !sessionClaims?.metadata?.onboardingComplete) {
-    const onOnboarding = new URL('/onboarding', req.url)
-    return NextResponse.redirect(onOnboarding)
-  }
-
-   // If the user is logged in and the route is protected, let them view.
-   if(isPublicRoute(req) && isAuthenticated) {
-    return NextResponse.next()
-   }
-
-   // Redirect any unknown/invalid routes to sign-up page
-   if(!isPublicRoute(req) && !isOnboardingRoute(req) && !isAuthenticated) {
-    const signUpUrl = new URL('/sign-up', req.url)
-    return NextResponse.redirect(signUpUrl)
-   }
+  return NextResponse.next()
 })
 
 export const config = {

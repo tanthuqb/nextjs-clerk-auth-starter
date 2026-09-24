@@ -2,7 +2,9 @@ export {}
 
 declare global {
   interface CustomJwtSessionClaims {
-    metadata: {
+    // Populated by the Clerk session token customization:
+    // { "metadata": "{{user.public_metadata}}" }
+    metadata?: {
       onboardingComplete?: boolean
     }
   }

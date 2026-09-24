@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import './globals.css'
 
 export default function GlobalError({
   error,
@@ -15,7 +16,7 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <html>
+    <html lang="en">
       <body>
         <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 px-4">
           <div className="text-center">
