@@ -22,7 +22,7 @@ Complete with user authentication flows, protected routes, onboarding, profile m
 |---------|-----------|---------------------|
 | ![Sign Up](./screenshots/signup.png) | ![Dashboard](./screenshots/dashboard.png) | ![Profile](./screenshots/profile-dark.png) |
 
-> Screenshot files are not committed yet. See [`screenshots/README.md`](./screenshots/README.md).
+> Captured from the live deployment at 1280x800. See [`screenshots/README.md`](./screenshots/README.md) to refresh them.
 
 ---
 
